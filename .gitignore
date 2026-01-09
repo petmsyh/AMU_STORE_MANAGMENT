@@ -1,0 +1,21 @@
+# Build output
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.cache
+*.pdb
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Archives
+*.zip
+*.rar
+
+# Env
+.env
