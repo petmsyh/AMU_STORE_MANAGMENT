@@ -23,66 +23,159 @@ namespace AMU.store.Mngt
 
         private void InitializeComponent()
         {
-            this.Text = "Purchase Items";
+            this.Text = "Purchase Items Viewer";
             this.Dock = DockStyle.Fill;
-            this.Padding = new Padding(10);
-            this.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            this.BackColor = System.Drawing.Color.White;
+            this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 
             toolTip = new ToolTip();
 
-            var main = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 3, RowCount = 4 };
+            // Title Panel
+            var titlePanel = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 80,
+                BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))),
+                Padding = new Padding(20)
+            };
+            var titleLabel = new Label
+            {
+                Text = "Purchase Items - Receive and Update Inventory",
+                Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold),
+                ForeColor = System.Drawing.Color.White,
+                Dock = DockStyle.Fill,
+                TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+            };
+            titlePanel.Controls.Add(titleLabel);
+
+            var main = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 3, RowCount = 5, Padding = new Padding(15) };
             main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 60));
             main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
             main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
-            main.RowStyles.Add(new RowStyle(SizeType.Absolute, 30)); // header
-            main.RowStyles.Add(new RowStyle(SizeType.Absolute, 30)); // search
+            main.RowStyles.Add(new RowStyle(SizeType.Absolute, 35)); // header
+            main.RowStyles.Add(new RowStyle(SizeType.Absolute, 50)); // search
             main.RowStyles.Add(new RowStyle(SizeType.Percent, 100)); // grid
-            main.RowStyles.Add(new RowStyle(SizeType.Absolute, 30)); // buttons/status
+            main.RowStyles.Add(new RowStyle(SizeType.Absolute, 70)); // buttons
+            main.RowStyles.Add(new RowStyle(SizeType.Absolute, 32)); // status
 
-            var lbl = new Label { Text = "Select Purchase:", Anchor = AnchorStyles.Left, AutoSize = true, TextAlign = ContentAlignment.MiddleLeft };
-            cbPurchases = new ComboBox { Dock = DockStyle.Fill, DropDownStyle = ComboBoxStyle.DropDownList };
-            cbPurchases.Margin = new Padding(3, 3, 3, 3);
+            var lbl = new Label 
+            { 
+                Text = "Select Purchase:", 
+                Anchor = AnchorStyles.Left, 
+                AutoSize = true, 
+                TextAlign = ContentAlignment.MiddleLeft,
+                Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold)
+            };
+            cbPurchases = new ComboBox 
+            { 
+                Dock = DockStyle.Fill, 
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Font = new System.Drawing.Font("Segoe UI", 10F),
+                FlatStyle = FlatStyle.Flat,
+                Margin = new Padding(3, 3, 3, 3)
+            };
 
             main.Controls.Add(lbl, 0, 0);
             main.SetColumnSpan(lbl, 1);
             main.Controls.Add(cbPurchases, 0, 1);
 
-            tbSearch = new TextBox { Dock = DockStyle.Fill };
+            tbSearch = new TextBox 
+            { 
+                Dock = DockStyle.Fill,
+                Font = new System.Drawing.Font("Segoe UI", 10F),
+                BorderStyle = BorderStyle.FixedSingle
+            };
             toolTip.SetToolTip(tbSearch, "Type to filter properties by name");
-            // Note: PlaceholderText is not available on .NET Framework 4.7.2; keep tooltip instead
             main.Controls.Add(tbSearch, 1, 1);
+            main.SetColumnSpan(tbSearch, 2);
 
-            btnReceiveSelected = new Button { Text = "Receive Selected", Dock = DockStyle.Fill };
-            btnReceiveAll = new Button { Text = "Receive All", Dock = DockStyle.Fill }; 
+            dgvItems = new DataGridView 
+            { 
+                Dock = DockStyle.Fill, 
+                AllowUserToAddRows = false, 
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                BackgroundColor = System.Drawing.Color.White,
+                BorderStyle = BorderStyle.None,
+                CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal,
+                GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230))))),
+                EnableHeadersVisualStyles = false,
+                ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None,
+                RowHeadersVisible = false,
+                AllowUserToResizeRows = false,
+                ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
+                {
+                    BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))),
+                    ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))),
+                    Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold),
+                    Padding = new Padding(10, 5, 10, 5),
+                    SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))),
+                    SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))),
+                },
+                ColumnHeadersHeight = 40,
+                RowTemplate = { Height = 35 },
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    Font = new System.Drawing.Font("Segoe UI", 9.75F),
+                    SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))),
+                    SelectionForeColor = System.Drawing.Color.White
+                }
+            };
+
+            // columns
+            dgvItems.Columns.Add(new DataGridViewTextBoxColumn { Name = "PropertyName", HeaderText = "Property", ReadOnly = true });
+            dgvItems.Columns.Add(new DataGridViewTextBoxColumn { Name = "OrderedQty", HeaderText = "Ordered", ReadOnly = true, Width = 100 });
+            dgvItems.Columns.Add(new DataGridViewTextBoxColumn { Name = "ReceivedQty", HeaderText = "Received", ReadOnly = false, Width = 100 });
+            dgvItems.Columns.Add(new DataGridViewTextBoxColumn { Name = "QualityNotes", HeaderText = "Quality Notes", ReadOnly = false });
+
+            main.Controls.Add(dgvItems, 0, 2);
+            main.SetColumnSpan(dgvItems, 3);
+
+            btnReceiveSelected = new Button 
+            { 
+                Text = "Receive Selected", 
+                Dock = DockStyle.Fill,
+                BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))),
+                ForeColor = System.Drawing.Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold),
+                Cursor = Cursors.Hand,
+                Height = 45
+            };
+            btnReceiveSelected.FlatAppearance.BorderSize = 0;
+            btnReceiveAll = new Button 
+            { 
+                Text = "Receive All", 
+                Dock = DockStyle.Fill,
+                BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(167)))), ((int)(((byte)(69)))),
+                ForeColor = System.Drawing.Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold),
+                Cursor = Cursors.Hand,
+                Height = 45
+            };
+            btnReceiveAll.FlatAppearance.BorderSize = 0;
             toolTip.SetToolTip(btnReceiveSelected, "Receive only selected rows and update inventory");
             toolTip.SetToolTip(btnReceiveAll, "Receive all displayed items and update inventory");
 
             main.Controls.Add(btnReceiveSelected, 1, 3);
             main.Controls.Add(btnReceiveAll, 2, 3);
 
-            dgvItems = new DataGridView { Dock = DockStyle.Fill, AllowUserToAddRows = false, SelectionMode = DataGridViewSelectionMode.FullRowSelect, AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill };
-            dgvItems.RowHeadersVisible = false;
-            dgvItems.AllowUserToResizeRows = false;
-            dgvItems.BackgroundColor = Color.White;
-            dgvItems.DefaultCellStyle.SelectionBackColor = Color.FromArgb(51, 153, 255);
-            dgvItems.DefaultCellStyle.SelectionForeColor = Color.White;
-
-            // columns
-            dgvItems.Columns.Add(new DataGridViewTextBoxColumn { Name = "PropertyName", HeaderText = "Property", ReadOnly = true });
-            dgvItems.Columns.Add(new DataGridViewTextBoxColumn { Name = "OrderedQty", HeaderText = "Ordered", ReadOnly = true, Width = 80 });
-            dgvItems.Columns.Add(new DataGridViewTextBoxColumn { Name = "ReceivedQty", HeaderText = "Received", ReadOnly = false, Width = 80 });
-            dgvItems.Columns.Add(new DataGridViewTextBoxColumn { Name = "QualityNotes", HeaderText = "Quality Notes", ReadOnly = false });
-
-            main.Controls.Add(dgvItems, 0, 2);
-            main.SetColumnSpan(dgvItems, 3);
-
-            statusStrip = new StatusStrip();
-            statusLabel = new ToolStripStatusLabel { Text = "Ready" };
+            statusStrip = new StatusStrip 
+            { 
+                BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))),
+                Font = new System.Drawing.Font("Segoe UI", 9F)
+            };
+            statusLabel = new ToolStripStatusLabel 
+            { 
+                Text = "Ready",
+                ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64))))
+            };
             statusStrip.Items.Add(statusLabel);
-            main.Controls.Add(statusStrip, 0, 3);
-            main.SetColumnSpan(statusStrip, 1);
+            main.Controls.Add(statusStrip, 0, 4);
+            main.SetColumnSpan(statusStrip, 3);
 
             this.Controls.Add(main);
+            this.Controls.Add(titlePanel);
 
             // events
             cbPurchases.SelectedIndexChanged += CbPurchases_SelectedIndexChanged;

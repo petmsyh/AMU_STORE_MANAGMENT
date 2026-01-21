@@ -40,31 +40,146 @@ namespace AMU.store.Mngt
 
         private void InitializeComponent()
         {
-            this.Text = "Model 22 - Store Issuing";
+            this.Text = "Model 22 - Property Issuing";
             this.Dock = DockStyle.Fill;
+            this.BackColor = System.Drawing.Color.White;
+            this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 
-            this.Padding = new Padding(8);
-            cbRequests = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Width = 320 };
-            var btnRefresh = new Button { Text = "Refresh" };
+            // Title Panel
+            var titlePanel = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 80,
+                BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))),
+                Padding = new Padding(20)
+            };
+            var titleLabel = new Label
+            {
+                Text = "Property Issue Form (Model 22)",
+                Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold),
+                ForeColor = System.Drawing.Color.White,
+                Dock = DockStyle.Fill,
+                TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+            };
+            titlePanel.Controls.Add(titleLabel);
+
+            this.Padding = new Padding(15);
+            cbRequests = new ComboBox 
+            { 
+                DropDownStyle = ComboBoxStyle.DropDownList, 
+                Width = 400,
+                Font = new System.Drawing.Font("Segoe UI", 10F),
+                FlatStyle = FlatStyle.Flat
+            };
+            
+            var btnRefresh = new Button 
+            { 
+                Text = "Refresh",
+                Width = 100,
+                Height = 35,
+                BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))),
+                ForeColor = System.Drawing.Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold),
+                Cursor = Cursors.Hand
+            };
+            btnRefresh.FlatAppearance.BorderSize = 0;
             btnRefresh.Click += (s, e) => LoadRequests();
 
-            var top = new FlowLayoutPanel { Dock = DockStyle.Top, Height = 40 }; top.Controls.Add(cbRequests); top.Controls.Add(btnRefresh);
+            var top = new FlowLayoutPanel { Dock = DockStyle.Top, Height = 60, Padding = new Padding(5) };
+            top.Controls.Add(new Label 
+            { 
+                Text = "Select Request:", 
+                AutoSize = true,
+                Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold),
+                Padding = new Padding(0, 8, 10, 0)
+            });
+            top.Controls.Add(cbRequests);
+            top.Controls.Add(btnRefresh);
 
-            dgvItems = new DataGridView { Dock = DockStyle.Fill, AllowUserToAddRows = false, SelectionMode = DataGridViewSelectionMode.FullRowSelect };
+            var gridPanel = new Panel { Dock = DockStyle.Fill, Padding = new Padding(5) };
+            var gridLabel = new Label
+            {
+                Text = "Items to Issue:",
+                AutoSize = true,
+                Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold),
+                Dock = DockStyle.Top,
+                Padding = new Padding(0, 0, 0, 10)
+            };
+
+            dgvItems = new DataGridView 
+            { 
+                Dock = DockStyle.Fill, 
+                AllowUserToAddRows = false, 
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                BackgroundColor = System.Drawing.Color.White,
+                BorderStyle = BorderStyle.None,
+                CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal,
+                GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230))))),
+                EnableHeadersVisualStyles = false,
+                ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None,
+                ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
+                {
+                    BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))),
+                    ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))),
+                    Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold),
+                    Padding = new Padding(10, 5, 10, 5),
+                    SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))),
+                    SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))),
+                },
+                ColumnHeadersHeight = 40,
+                RowTemplate = { Height = 35 },
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    Font = new System.Drawing.Font("Segoe UI", 9.75F),
+                    SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))),
+                    SelectionForeColor = System.Drawing.Color.White
+                }
+            };
             dgvItems.Columns.Add(new DataGridViewTextBoxColumn { Name = "PropertyName", HeaderText = "Property", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
-            dgvItems.Columns.Add(new DataGridViewTextBoxColumn { Name = "RequestedQty", HeaderText = "Requested", Width = 80, ReadOnly = true });
-            dgvItems.Columns.Add(new DataGridViewTextBoxColumn { Name = "AvailableQty", HeaderText = "Available", Width = 80, ReadOnly = true });
-            dgvItems.Columns.Add(new DataGridViewTextBoxColumn { Name = "IssueQty", HeaderText = "Issue", Width = 80 });
+            dgvItems.Columns.Add(new DataGridViewTextBoxColumn { Name = "RequestedQty", HeaderText = "Requested", Width = 100, ReadOnly = true });
+            dgvItems.Columns.Add(new DataGridViewTextBoxColumn { Name = "AvailableQty", HeaderText = "Available", Width = 100, ReadOnly = true });
+            dgvItems.Columns.Add(new DataGridViewTextBoxColumn { Name = "IssueQty", HeaderText = "Issue", Width = 100 });
 
-            txtIssuedTo = new TextBox { Width = 320 };
-            btnIssue = new Button { Text = "Issue" };
+            gridPanel.Controls.Add(dgvItems);
+            gridPanel.Controls.Add(gridLabel);
+
+            txtIssuedTo = new TextBox 
+            { 
+                Width = 350,
+                Font = new System.Drawing.Font("Segoe UI", 10F),
+                BorderStyle = BorderStyle.FixedSingle
+            };
+            
+            btnIssue = new Button 
+            { 
+                Text = "Issue Items",
+                Width = 180,
+                Height = 45,
+                BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))),
+                ForeColor = System.Drawing.Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold),
+                Cursor = Cursors.Hand
+            };
+            btnIssue.FlatAppearance.BorderSize = 0;
             btnIssue.Click += BtnIssue_Click;
 
-            var bottom = new FlowLayoutPanel { Dock = DockStyle.Bottom, Height = 48, FlowDirection = FlowDirection.RightToLeft }; bottom.Controls.Add(btnIssue); bottom.Controls.Add(txtIssuedTo);
+            var bottom = new FlowLayoutPanel { Dock = DockStyle.Bottom, Height = 70, FlowDirection = FlowDirection.RightToLeft, Padding = new Padding(5, 15, 5, 5) };
+            bottom.Controls.Add(btnIssue);
+            bottom.Controls.Add(txtIssuedTo);
+            bottom.Controls.Add(new Label 
+            { 
+                Text = "Issued To:", 
+                AutoSize = true,
+                Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold),
+                Padding = new Padding(0, 8, 10, 0)
+            });
 
-            this.Controls.Add(dgvItems);
+            this.Controls.Add(gridPanel);
             this.Controls.Add(top);
             this.Controls.Add(bottom);
+            this.Controls.Add(titlePanel);
 
             LoadRequests();
             cbRequests.SelectedIndexChanged += CbRequests_SelectedIndexChanged;

@@ -19,31 +19,117 @@ namespace AMU.store.Mngt
 
         private void RequestsForm_Load(object sender, EventArgs e)
         {
-            var main = new TableLayoutPanel { Dock = DockStyle.Fill, RowCount = 3 };
-            main.RowStyles.Add(new RowStyle(SizeType.Absolute, 40));
-            main.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            main.RowStyles.Add(new RowStyle(SizeType.Absolute, 24));
+            this.BackColor = System.Drawing.Color.White;
+            this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 
-            var pnlTop = new FlowLayoutPanel { Dock = DockStyle.Fill, Padding = new Padding(6) };
-            var txtSearch = new TextBox { Width = 300 };
-            var btnSearch = new Button { Text = "Search" };
-            var btnRefresh = new Button { Text = "Refresh" };
+            // Title Panel
+            var titlePanel = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 80,
+                BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))),
+                Padding = new Padding(20)
+            };
+            var titleLabel = new Label
+            {
+                Text = "Purchase Requests Overview",
+                Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold),
+                ForeColor = System.Drawing.Color.White,
+                Dock = DockStyle.Fill,
+                TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+            };
+            titlePanel.Controls.Add(titleLabel);
+
+            var main = new TableLayoutPanel { Dock = DockStyle.Fill, RowCount = 3, Padding = new Padding(15) };
+            main.RowStyles.Add(new RowStyle(SizeType.Absolute, 60));
+            main.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+            main.RowStyles.Add(new RowStyle(SizeType.Absolute, 32));
+
+            var pnlTop = new FlowLayoutPanel { Dock = DockStyle.Fill, Padding = new Padding(5) };
+            var txtSearch = new TextBox 
+            { 
+                Width = 350,
+                Font = new System.Drawing.Font("Segoe UI", 10F),
+                BorderStyle = BorderStyle.FixedSingle
+            };
+            var btnSearch = new Button 
+            { 
+                Text = "Search",
+                Width = 100,
+                Height = 35,
+                BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))),
+                ForeColor = System.Drawing.Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold),
+                Cursor = Cursors.Hand
+            };
+            btnSearch.FlatAppearance.BorderSize = 0;
+            var btnRefresh = new Button 
+            { 
+                Text = "Refresh",
+                Width = 100,
+                Height = 35,
+                BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))),
+                ForeColor = System.Drawing.Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold),
+                Cursor = Cursors.Hand
+            };
+            btnRefresh.FlatAppearance.BorderSize = 0;
             pnlTop.Controls.Add(txtSearch); pnlTop.Controls.Add(btnSearch); pnlTop.Controls.Add(btnRefresh);
 
-            dgv = new DataGridView { Dock = DockStyle.Fill, ReadOnly = true, AllowUserToAddRows = false, SelectionMode = DataGridViewSelectionMode.FullRowSelect };
-            dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "RequestId", HeaderText = "ID", Width = 60 });
-            dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "Department", HeaderText = "Department", Width = 200 });
+            dgv = new DataGridView 
+            { 
+                Dock = DockStyle.Fill, 
+                ReadOnly = true, 
+                AllowUserToAddRows = false, 
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                BackgroundColor = System.Drawing.Color.White,
+                BorderStyle = BorderStyle.None,
+                CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal,
+                GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230))))),
+                EnableHeadersVisualStyles = false,
+                ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None,
+                ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
+                {
+                    BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))),
+                    ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))),
+                    Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold),
+                    Padding = new Padding(10, 5, 10, 5),
+                    SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))),
+                    SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))),
+                },
+                ColumnHeadersHeight = 40,
+                RowTemplate = { Height = 35 },
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    Font = new System.Drawing.Font("Segoe UI", 9.75F),
+                    SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))),
+                    SelectionForeColor = System.Drawing.Color.White
+                }
+            };
+            dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "RequestId", HeaderText = "ID", Width = 70 });
+            dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "Department", HeaderText = "Department", Width = 250 });
             dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "Purpose", HeaderText = "Purpose", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
             dgv.CellDoubleClick += Dgv_CellDoubleClick;
 
-            var status = new StatusStrip();
-            statusLabel = new ToolStripStatusLabel { Text = "Ready" };
+            var status = new StatusStrip 
+            { 
+                BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))),
+                Font = new System.Drawing.Font("Segoe UI", 9F)
+            };
+            statusLabel = new ToolStripStatusLabel 
+            { 
+                Text = "Ready",
+                ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64))))
+            };
             status.Items.Add(statusLabel);
 
             main.Controls.Add(pnlTop, 0, 0);
             main.Controls.Add(dgv, 0, 1);
             main.Controls.Add(status, 0, 2);
             this.Controls.Add(main);
+            this.Controls.Add(titlePanel);
 
             btnSearch.Click += (s, ev) => LoadRequests(txtSearch.Text.Trim());
             btnRefresh.Click += (s, ev) => LoadRequests(null);
